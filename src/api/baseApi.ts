@@ -1,7 +1,7 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2024-05-13 20:44:52
- * @LastEditTime: 2024-05-13 22:35:02
+ * @LastEditTime: 2024-05-14 08:37:53
  * @Description: 基础api
  */
 import axios from 'axios';
@@ -48,8 +48,8 @@ export function baseApi(config: RequestConfig): any {
       .catch((error) => {
         reject(error);
         if (error.response && error.response.data) {
-          const { errorCode, errorMessage } = error.response.data;
-          ElMessage.error(`错误码: ${errorCode}, 错误消息: ${errorMessage}`);
+          const { errorMessage } = error.response.data;
+          ElMessage.error(`错误消息: ${errorMessage}`);
         } else {
           ElMessage.error(`发生错误 -> ${error}`);
         }
