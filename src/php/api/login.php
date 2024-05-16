@@ -2,7 +2,7 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2024-05-13 21:56:21
- * @LastEditTime: 2024-05-15 09:05:11
+ * @LastEditTime: 2024-05-16 09:08:21
  * @Description: 登录接口 - 只处理post请求
  */
 
@@ -26,3 +26,5 @@ if ($result->rows === 0) {
     DefaultError("密码错误");
   }
 }
+
+echo json_encode($result->data[0]);

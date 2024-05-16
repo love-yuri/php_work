@@ -2,18 +2,30 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2024-05-15 22:19:51
- * @LastEditTime: 2024-05-15 23:02:46
+ * @LastEditTime: 2024-05-16 09:33:06
  * @Description: 删除新闻
  */
 require_once ("../mysql/mysql.php");
 require_once ("../common/utils.php");
 
 CORS();
-$news = getRequestBody();
 
-$text = $news['content'];
+$body = getRequestBody();
 
-$res = execSql("select * from news where content like '%$text%' or title like '%$text%'");
+$current = $body["current"];
+$size = $body["size"];
+$text = $body["content"];
+
+$result = array();
+
+$res = execSql("select * from news where content like '%$text%' or title like '%$text%' ORDER BY date");
+
+if ($res->rows < ($current - 1) * $size) {
+  $current = 1;
+}
+
+$res->data = array_splice($res->data, ($current - 1) * $size, $size);
+
 $news = array();
 foreach ($res->data as $key => $value) {
   $news[$key]['title'] = $value['title'];
@@ -28,4 +40,9 @@ if ($news == null) {
   $news = array();
 }
 
-echo json_encode($news);
+$result['news'] = $news;
+$result['total'] = $res->rows;
+$result['current'] = $current;
+$result['size'] = $size;
+
+echo json_encode($result);

@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full">
+  <el-scrollbar class="w-full">
     <div class="text-[30px] my-3 flex flex-row justify-center items-center">
       <span class="mx-2">新闻发布中心</span>
       <el-icon class="cursor-pointer" @click="addNews" color="green"><Plus /></el-icon>
@@ -21,7 +21,7 @@
           <el-button type="primary" class="mx-2" @click="commentNews(item)">评论</el-button>
         </div>
         <div
-          v-for="kk in item.comments.filter((k) => k.status == 1 || userInfo.isRoot)"
+          v-for="kk in item.comments.filter((k) => k.status == 1 || userInfo.root == 1)"
           :key="kk.id"
           class="my-1 flex flex-row items-center"
         >
@@ -39,7 +39,10 @@
         </template>
       </el-card>
     </template>
-  </div>
+    <div class="flex w-full justify-center fixed bottom-3">
+      <el-pagination layout="prev, pager, next" @current-change="currentChange" :page-size="pageSize" :total="total" class="my-4" />
+    </div>
+  </el-scrollbar>
   <el-dialog v-model="showEdit" :title="`${isCreate ? '发布' : '编辑'}新闻`" width="500">
     <div>
       <el-form label-position="top" :model="currentNews">
@@ -54,14 +57,14 @@
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="showEdit = false">取消</el-button>
-        <el-button type="primary" @click="updateNews"> 确认修改 </el-button>
+        <el-button type="primary" @click="updateNews"> {{ `${isCreate ? '发布' : '编辑'}新闻` }} </el-button>
       </div>
     </template>
   </el-dialog>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { list, comment, update, create, deleteNews, searchNews } from '@/api/news';
 import { update as updateComment, deleteComment } from '@/api/comment';
 import avatarPng from '@/assets/avatar.png';
@@ -71,7 +74,7 @@ const props = defineProps<{
   userInfo: {
     id: string;
     username: string;
-    isRoot: boolean;
+    root: number;
   };
 }>();
 
@@ -93,6 +96,9 @@ interface News {
 const isCreate = ref(false);
 const showEdit = ref(false);
 const searchText = ref('');
+const total = ref(0);
+const pageSize = ref(3);
+const current = ref(1);
 const currentNews = ref<News>({
   id: '',
   title: '',
@@ -103,11 +109,17 @@ const currentNews = ref<News>({
 const news = ref<News[]>([]);
 
 async function loadData() {
-  const res = await list({});
-  news.value = res;
+  const res = await list({
+    current: current.value,
+    size: pageSize.value,
+  });
+  news.value = res.news;
+  total.value = res.total;
 }
 
-loadData();
+onMounted(() => {
+  loadData();
+});
 
 async function commentNews(item: News) {
   await comment({
@@ -164,9 +176,18 @@ async function delNews(id: string) {
 }
 
 async function search() {
-  news.value = await searchNews({
+  const res = await searchNews({
+    current: current.value,
+    size: pageSize.value,
     content: searchText.value,
   });
+  news.value = res.news;
+  total.value = res.total;
+}
+
+async function currentChange(val: number) {
+  current.value = val;
+  loadData();
 }
 </script>
 
@@ -176,5 +197,12 @@ async function search() {
 }
 .el-table .success-row {
   --el-table-tr-bg-color: var(--el-color-success-light-9);
+}
+
+.example-pagination-block + .example-pagination-block {
+  margin-top: 10px;
+}
+.example-pagination-block .example-demonstration {
+  margin-bottom: 16px;
 }
 </style>

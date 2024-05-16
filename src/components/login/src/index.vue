@@ -1,7 +1,7 @@
 <!--
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2024-05-15 08:10:51
- * @LastEditTime: 2024-05-15 10:33:05
+ * @LastEditTime: 2024-05-16 09:12:00
  * @Description: 登录界面
 -->
 <template>
@@ -34,8 +34,8 @@ const baseUser = reactive({
 });
 
 const onSubmit = async () => {
-  await login(baseUser);
-  emits('success');
+  const res = await login(baseUser);
+  emits('success', res);
   ElMessage.success('登录成功');
 };
 </script>

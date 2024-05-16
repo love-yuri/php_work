@@ -17,6 +17,7 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  base: './' /* 设置打包根路径 */,
   build: {
     chunkSizeWarningLimit: 10000, // 设置新的警告阈值，单位为字节
   },
