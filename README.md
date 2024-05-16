@@ -49,6 +49,7 @@
 1. cd 进入`src/php/mysql`
 2. 使用终端登录mysql -> `mysql -u用户名 -p密码`
 3. `source ./sql.sql;` 执行sql文件
+4. 修改`src\php\mysql\mysql.php` 文件更改mysql数据库连接信息
 
 ### 运行php后端
 
