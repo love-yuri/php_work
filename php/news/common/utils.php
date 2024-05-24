@@ -73,18 +73,18 @@ function CORS()
   }
 }
 
-function execSql($sql): SqlRes
+function execSql($sql)
 {
   try {
     global $conn;
     $line = 0;
     $result = $conn->query($sql);
-    if($result === false) {
+    if ($result === false) {
       DefaultError('sql执行失败!!');
       exit();
     }
 
-    if($result === true) {
+    if ($result === true) {
       return new SqlRes(array(), 0, mysqli_affected_rows($conn));
     }
 
@@ -96,7 +96,7 @@ function execSql($sql): SqlRes
       }
     }
     return new SqlRes($js, $line, mysqli_affected_rows($conn));
-    
+
   } catch (Exception $e) {
     ErrorMessage(ErrorCode::SQL_ERROR, $e->getMessage());
   }

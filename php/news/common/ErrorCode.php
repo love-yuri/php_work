@@ -2,10 +2,10 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2024-05-14 08:09:36
- * @LastEditTime: 2024-05-14 09:39:17
+ * @LastEditTime: 2024-05-24 20:55:07
  * @Description: 错误代码
  */
-enum ErrorCode: int
+class ErrorCode
 {
   const DEFAULT_ERROR = 3000;
   const EMPTY_REQUEST_BODY = 3001;

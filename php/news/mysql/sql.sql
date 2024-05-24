@@ -1,14 +1,13 @@
-DROP DATABASE IF EXISTS php_news;
-CREATE DATABASE php_news;
-USE php_news;
+USE h_092221208;
 
+DROP TABLE IF EXISTS user;
 CREATE TABLE user (
     id INT(11) NOT NULL AUTO_INCREMENT,
-    username VARCHAR(50) NOT NULL,
-    password VARCHAR(255) NOT NULL,
+    username VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+    password VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
     root BOOLEAN NOT NULL DEFAULT false,
     PRIMARY KEY (id)
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;;
 
 INSERT INTO user (id, username, password, root) VALUES (1, 'admin', '123', true);
 INSERT INTO user (id, username, password) VALUES (2, 'yuri', '2078');
@@ -20,7 +19,7 @@ CREATE TABLE news (
     `title` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
     `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
     `date` DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;;
 
 -- 评论
 DROP TABLE IF EXISTS comment;
@@ -31,7 +30,7 @@ CREATE TABLE comment (
     `user_id` INT(11) NOT NULL,
     `news_id` INT(11) NOT NULL,
     `date` DATETIME DEFAULT  CURRENT_TIMESTAMP NOT NULL
-);
+) CHARACTER SET utf8 COLLATE utf8_general_ci;;
 
 INSERT INTO news (id, title, content, date) VALUES
 (1, '科技突破：新型电池技术发布', '近日，常熟理工学院的研究团队发布了一项革命性的新型电池技术。这项技术大幅提升了电池的能量密度和充放电效率，有望在未来应用于电动汽车和便携式电子设备中。', '2024-05-15 10:00:00'),
