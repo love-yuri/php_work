@@ -2,7 +2,12 @@
   <el-scrollbar class="w-full">
     <div class="text-[30px] my-3 flex flex-row justify-center items-center">
       <span class="mx-2">新闻发布中心</span>
-      <el-icon class="cursor-pointer" @click="addNews" color="green"><Plus /></el-icon>
+      <el-tooltip v-if="userInfo.root == 1" class="box-item" effect="dark" content="添加新闻" placement="bottom">
+        <el-icon class="cursor-pointer border-2 border-gray-500" @click="addNews" color="gray"><Plus /></el-icon>
+      </el-tooltip>
+      <el-tooltip class="box-item" effect="dark" content="退出登录" placement="bottom">
+        <el-icon class="mx-2 cursor-pointer" color="gray" @click="logOut"><Tools /></el-icon>
+      </el-tooltip>
     </div>
     <div class="flex justify-center">
       <div class="w-[70%] flex flex-row items-center">
@@ -30,12 +35,12 @@
             <span class="text-[12px] text-gray-400">{{ kk.username }} {{ kk.date }}</span>
             <span>{{ kk.content }}</span>
           </div>
-          <el-button type="danger" class="mx-2" @click="delComment(kk)">删除</el-button>
+          <el-button type="danger" v-if="userInfo.root == 1" class="mx-2" @click="delComment(kk)">删除</el-button>
           <el-button type="primary" v-if="kk.status == 0" class="mx-2" @click="passComment(kk)">审核通过</el-button>
         </div>
         <template #footer>
-          <el-button type="primary" @click="editNews(item)">编辑</el-button>
-          <el-button type="danger" @click="delNews(item.id)">删除</el-button>
+          <el-button type="primary" @click="editNews(item)" v-if="userInfo.root == 1">编辑</el-button>
+          <el-button type="danger" @click="delNews(item.id)" v-if="userInfo.root == 1">删除</el-button>
         </template>
       </el-card>
     </template>
@@ -70,6 +75,7 @@ import { update as updateComment, deleteComment } from '@/api/comment';
 import avatarPng from '@/assets/avatar.png';
 import { ElMessage } from 'element-plus';
 
+const emits = defineEmits(['logOut']);
 const props = defineProps<{
   userInfo: {
     id: string;
@@ -127,7 +133,11 @@ async function commentNews(item: News) {
     content: item.commentText,
     user_id: props.userInfo.id,
   });
-  ElMessage.success('评论成功');
+  if (props.userInfo.root == 1) {
+    ElMessage.success('评论成功');
+  } else {
+    ElMessage.success('评论成功，等待审核');
+  }
   item.commentText = '';
   loadData();
 }
@@ -188,6 +198,11 @@ async function search() {
 async function currentChange(val: number) {
   current.value = val;
   loadData();
+}
+
+function logOut() {
+  localStorage.removeItem('userInfo_php');
+  emits('logOut');
 }
 </script>
 
