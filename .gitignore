@@ -1,3 +1,8 @@
 node_modules
 tailwindcss.css
 dist/
+php/assets
+php/index.html
+php/*.rar
+php/favicon.ico
+php/*.doc
