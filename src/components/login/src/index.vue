@@ -15,7 +15,7 @@
     <el-form-item>
       <div class="flex justify-between w-full">
         <el-button type="primary" @click="onSubmit">登录</el-button>
-        <el-button type="primary" @click="onSubmit">登录</el-button>
+        <el-button type="primary" @click="back">返回</el-button>
       </div>
     </el-form-item>
   </el-form>
@@ -37,5 +37,13 @@ const onSubmit = async () => {
   const res = await login(baseUser);
   emits('success', res);
   ElMessage.success('登录成功');
+};
+
+const back = () => {
+  emits('success', {
+    id: -1,
+    username: '',
+    root: 0,
+  });
 };
 </script>
