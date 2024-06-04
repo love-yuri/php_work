@@ -5,9 +5,10 @@
       <el-tooltip v-if="userInfo.root == 1" class="box-item" effect="dark" content="添加新闻" placement="bottom">
         <el-icon class="cursor-pointer border-2 border-gray-500" @click="addNews" color="gray"><Plus /></el-icon>
       </el-tooltip>
-      <el-tooltip class="box-item" effect="dark" content="退出登录" placement="bottom">
+      <el-tooltip v-if="userInfo.id != -1" class="box-item" effect="dark" content="退出登录" placement="bottom">
         <el-icon class="mx-2 cursor-pointer" color="gray" @click="logOut"><Tools /></el-icon>
       </el-tooltip>
+      <a class="text-[23px] cursor-pointer" v-if="userInfo.id == -1" @click="$emit('login')">登录</a>
     </div>
     <div class="flex justify-center">
       <div class="w-[70%] flex flex-row items-center">
@@ -20,7 +21,7 @@
       <el-card class="my-4" :header="item.title">
         <p class="text-right w-full text-[10px]">{{ item.date }}</p>
         <p>{{ item.content }}</p>
-        <div class="flex flex-row items-center my-6">
+        <div class="flex flex-row items-center my-6" v-if="userInfo.id != -1">
           <el-avatar class="mx-2" :src="avatarPng" />
           <el-input :rows="1" placeholder="请输入内容" v-model="item.commentText" />
           <el-button type="primary" class="mx-2" @click="commentNews(item)">评论</el-button>
@@ -75,10 +76,10 @@ import { update as updateComment, deleteComment } from '@/api/comment';
 import avatarPng from '@/assets/avatar.png';
 import { ElMessage } from 'element-plus';
 
-const emits = defineEmits(['logOut']);
+const emits = defineEmits(['logOut', 'login']);
 const props = defineProps<{
   userInfo: {
-    id: string;
+    id: number;
     username: string;
     root: number;
   };
